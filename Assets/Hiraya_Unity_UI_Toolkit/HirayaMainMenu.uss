@@ -1,0 +1,259 @@
+/* Hiraya UI Toolkit translation of index.css.
+   Put this file beside HirayaMainMenu.uxml and assign it to the UXML's StyleSheets
+   in UI Builder, or add it to the UIDocument at runtime. */
+
+:root {
+    --parchment: rgb(232, 223, 196);
+    --parchment-muted: rgb(184, 179, 159);
+    --gold: rgb(178, 154, 97);
+    --gold-bright: rgb(208, 188, 130);
+    --ink: rgb(7, 16, 15);
+}
+
+.game-menu {
+    flex-grow: 1;
+    position: relative;
+    background-color: var(--ink);
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.world-backdrop {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-image: url("hiraya-barangay.jpg");
+    -unity-background-scale-mode: scale-and-crop;
+    background-color: var(--ink);
+    opacity: 0.76;
+}
+
+.sky-grade {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(4, 10, 10, 0.48);
+}
+
+.rain {
+    position: absolute;
+    left: -20%;
+    right: -20%;
+    top: -20%;
+    bottom: -20%;
+    background-color: rgba(210, 220, 211, 0.06);
+}
+
+.rain-far {
+    opacity: 0.32;
+}
+
+.rain-near {
+    opacity: 0.16;
+}
+
+.lightning {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(205, 219, 217, 0.08);
+}
+
+.menu-panel {
+    width: 470px;
+    max-width: 91%;
+    padding-left: 42px;
+    padding-right: 42px;
+    padding-top: 38px;
+    padding-bottom: 32px;
+    align-items: center;
+    background-color: rgba(9, 17, 16, 0.72);
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-color: rgba(193, 176, 132, 0.21);
+    border-right-color: rgba(193, 176, 132, 0.21);
+    border-top-color: rgba(193, 176, 132, 0.21);
+    border-bottom-color: rgba(193, 176, 132, 0.21);
+}
+
+.crest {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 18px;
+}
+
+.crest-line {
+    width: 36px;
+    height: 1px;
+    background-color: var(--gold);
+    margin-right: 12px;
+}
+
+.crest-line-right {
+    margin-right: 0;
+    margin-left: 12px;
+}
+
+.crest-symbol {
+    color: var(--gold);
+    font-size: 18px;
+}
+
+.eyebrow,
+.subtitle,
+.edition {
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+}
+
+.eyebrow {
+    color: var(--parchment-muted);
+    font-size: 11px;
+}
+
+.game-title {
+    margin-top: 11px;
+    margin-bottom: 3px;
+    color: rgb(238, 230, 210);
+    font-size: 47px;
+    -unity-font-style: bold;
+    letter-spacing: 4px;
+}
+
+.subtitle {
+    color: var(--gold-bright);
+    font-size: 10px;
+    -unity-font-style: italic;
+    letter-spacing: 2px;
+}
+
+.divider {
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    margin-top: 23px;
+    margin-bottom: 20px;
+}
+
+.divider-line {
+    flex-grow: 1;
+    height: 1px;
+    background-color: var(--gold);
+    opacity: 0.75;
+}
+
+.divider-symbol {
+    margin-left: 11px;
+    margin-right: 11px;
+    color: var(--gold);
+    font-size: 10px;
+}
+
+.menu-actions {
+    width: 100%;
+}
+
+.menu-button {
+    width: 100%;
+    min-height: 43px;
+    margin-bottom: 5px;
+    padding-left: 12px;
+    padding-right: 12px;
+    color: var(--parchment-muted);
+    background-color: rgba(0, 0, 0, 0);
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-color: rgba(0, 0, 0, 0);
+    border-right-color: rgba(0, 0, 0, 0);
+    border-top-color: rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(0, 0, 0, 0);
+    font-size: 13px;
+    letter-spacing: 2px;
+}
+
+.menu-button:hover,
+.menu-button:focus,
+.menu-button-primary {
+    color: rgb(241, 232, 209);
+    background-color: rgba(159, 139, 91, 0.12);
+}
+
+.menu-button-primary {
+    border-left-color: rgba(184, 160, 103, 0.26);
+    border-right-color: rgba(184, 160, 103, 0.26);
+    border-top-color: rgba(184, 160, 103, 0.26);
+    border-bottom-color: rgba(184, 160, 103, 0.26);
+}
+
+.save-note {
+    min-height: 16px;
+    margin-top: 18px;
+    color: rgba(219, 214, 196, 0.62);
+    font-size: 13px;
+    -unity-font-style: italic;
+    letter-spacing: 1px;
+}
+
+.settings-drawer {
+    width: 100%;
+    margin-top: 16px;
+    padding-left: 14px;
+    padding-right: 14px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-top-color: rgba(184, 160, 103, 0.22);
+    border-bottom-color: rgba(184, 160, 103, 0.22);
+}
+
+.setting-label {
+    color: var(--parchment-muted);
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.setting-toggle {
+    color: var(--gold-bright);
+    background-color: rgba(184, 160, 103, 0.08);
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-color: rgba(184, 160, 103, 0.25);
+    border-right-color: rgba(184, 160, 103, 0.25);
+    border-top-color: rgba(184, 160, 103, 0.25);
+    border-bottom-color: rgba(184, 160, 103, 0.25);
+    margin-bottom: 8px;
+}
+
+.edition,
+.photo-credit {
+    position: absolute;
+    bottom: 21px;
+    color: rgba(227, 224, 209, 0.58);
+    font-size: 9px;
+}
+
+.edition {
+    left: 26px;
+}
+
+.photo-credit {
+    right: 26px;
+    font-size: 10px;
+    -unity-font-style: italic;
+}

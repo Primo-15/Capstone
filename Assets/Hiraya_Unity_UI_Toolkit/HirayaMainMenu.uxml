@@ -1,0 +1,37 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Hiraya_Unity_UI_Toolkit/HirayaMainMenu.uss?fileID=7433441132597879392&amp;guid=11f727c45e30c22469836ecf661b8281&amp;type=3#HirayaMainMenu"/>
+    <ui:VisualElement name="game-menu" class="game-menu" style="background-image: url(&quot;project://database/Assets/Textures/Screenshot%202026-09-28%20223430.png?fileID=2800000&amp;guid=cd7ad2960b8d9ab478bc3cb165f30fbc&amp;type=3#Screenshot 2026-09-28 223430&quot;);">
+        <ui:VisualElement name="sky-grade" class="sky-grade"/>
+        <ui:VisualElement name="rain-far" class="rain rain-far"/>
+        <ui:VisualElement name="rain-near" class="rain rain-near"/>
+        <ui:VisualElement name="lightning" class="lightning"/>
+        <ui:VisualElement name="menu-panel" class="menu-panel">
+            <ui:VisualElement name="crest" class="crest">
+                <ui:VisualElement class="crest-line"/>
+                <ui:Label text="◆" class="crest-symbol"/>
+                <ui:VisualElement class="crest-line crest-line-right"/>
+            </ui:VisualElement>
+            <ui:Label text="A tale from the old barangay" class="eyebrow"/>
+            <ui:Label text="LIGAYA" name="Label" class="game-title" style="-unity-text-align: upper-center;"/>
+            <ui:Label text="THROUGH THE CONQUEST" class="subtitle"/>
+            <ui:VisualElement class="divider">
+                <ui:VisualElement class="divider-line"/>
+                <ui:Label text="✦" class="divider-symbol"/>
+                <ui:VisualElement class="divider-line divider-line-right"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="menu-actions" class="menu-actions">
+                <ui:Button name="start-game-button" text="◆     START GAME     ◆" class="menu-button menu-button-primary"/>
+                <ui:Button name="continue-button" text="◆     CONTINUE     ◆" enabled="false" class="menu-button"/>
+                <ui:Button name="settings-button" text="◆     SETTINGS     ◆" class="menu-button"/>
+                <ui:Button name="about-button" text="◆     ABOUT     ◆" class="menu-button"/>
+                <ui:Button name="quit-button" text="◆     QUIT     ◆" class="menu-button"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="settings-drawer" class="settings-drawer" style="display: none;">
+                <ui:Label text="Storm ambience" class="setting-label"/>
+                <ui:Button name="storm-toggle" text="Gentle" class="setting-toggle"/>
+                <ui:Label text="Display" class="setting-label"/>
+                <ui:Button name="display-toggle" text="Borderless" class="setting-toggle"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

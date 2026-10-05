@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// First-person 3D player controller: move, look, jump, sprint, crouch.
@@ -67,17 +68,32 @@ public class PlayerController : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Confined;
+
     }
 
     private void Update()
     {
-        HandleLook();
+        if (Keyboard.current.leftAltKey.isPressed)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            HandleLook();
+        }
+
         HandleCrouch();
         HandleMovement();
     }
 
     private void HandleLook()
     {
+        
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
 

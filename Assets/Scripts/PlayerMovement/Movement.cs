@@ -84,7 +84,17 @@ public class PlayerController : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
-            HandleLook();
+
+            // No mouse look while talking to an NPC
+            if (!NPCInteractable.InDialogue)
+                HandleLook();
+        }
+
+        // Frozen in place while talking to an NPC
+        if (NPCInteractable.InDialogue)
+        {
+            horizontalVelocity = Vector3.zero;
+            return;
         }
 
         HandleCrouch();
@@ -93,7 +103,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleLook()
     {
-        
+
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
 

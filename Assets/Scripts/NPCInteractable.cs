@@ -1,84 +1,135 @@
 using UnityEngine;
 using TMPro;
-#if ENABLE_INPUT_SYSTEM
-using UnityEngine.InputSystem;
-#endif
 
 public class NPCInteractable : MonoBehaviour
 {
+    // Other scripts (player movement, camera, NPC2) can check or set this
+    public static bool InDialogue { get; set; }
+
     [Header("Interaction")]
-    [SerializeField] private float interactDistance = 1f;
+    public float interactDistance = 2f;
 
     [Header("Prompt (shown when in range)")]
-    [SerializeField] private GameObject promptUI;
-    [SerializeField] private TMP_Text promptText;
-    [SerializeField] private string promptMessage = "talk to Manang";
+    public GameObject promptUI;
+    public TextMeshProUGUI promptText;
+    public string promptMessage = "Press \"E\" to talk to manang";
 
-    [Header("Dialogue (shown after pressing E)")]
-    [SerializeField] private GameObject dialogueUI;
-    [SerializeField] private TMP_Text dialogueText;
-    [SerializeField] private string dialogueMessage = "greetings Isay";
+    [Header("Dialogue")]
+    public GameObject dialoguePanel;
+    public TextMeshProUGUI dialogueText;
 
-    private Transform player;
-    private bool dialogueOpen;
-
-    private void Start()
+    [Header("Before talking to mom")]
+    [TextArea(2, 4)]
+    public string[] notReadyLines =
     {
-        GameObject p = GameObject.FindWithTag("Player");
+        "Isay, I'm busy right now.",
+        "Why don't you go talk to your mom first?"
+    };
+
+    [Header("Apple quest")]
+    [TextArea(2, 4)]
+    public string[] dialogueLines =
+    {
+        "Greetings Isay",
+        "Can you help me with something?",
+        "I need you to gather 5 <color=red>apples</color> for our visitors later"
+    };
+
+    [Header("After collecting all apples")]
+    [TextArea(2, 4)]
+    public string[] completeLines =
+    {
+        "Thanks Isay!",
+        "You have such a good heart",
+        "You can bring the sinigang to your mom"
+    };
+
+    Transform player;
+    string[] currentLines;
+    int lineIndex = -1;
+    bool IsTalking => lineIndex >= 0;
+
+    void Start()
+    {
+        var p = GameObject.FindGameObjectWithTag("Player");
         if (p != null) player = p.transform;
-        else Debug.LogWarning("[NPCInteractable] No object tagged 'Player' found.");
 
-        if (promptText != null) promptText.text = promptMessage;
-        if (dialogueText != null) dialogueText.text = dialogueMessage;
-
-        if (promptUI != null) promptUI.SetActive(false);
-        if (dialogueUI != null) dialogueUI.SetActive(false);
+        if (promptUI) promptUI.SetActive(false);
+        if (dialoguePanel) dialoguePanel.SetActive(false);
+        InDialogue = false;
     }
 
-    private void Update()
+    void OnDisable()
+    {
+        if (IsTalking) InDialogue = false;
+    }
+
+    void Update()
     {
         if (player == null) return;
 
-        // Horizontal distance only (ignore height difference)
-        Vector3 a = player.position;
-        Vector3 b = transform.position;
-        a.y = 0f;
-        b.y = 0f;
-        bool inRange = Vector3.Distance(a, b) <= interactDistance;
+        float dist = Vector3.Distance(player.position, transform.position);
+        bool inRange = dist <= interactDistance;
 
-        // Prompt is visible only when in range and the dialogue is not open
-        if (promptUI != null)
-        {
-            bool showPrompt = inRange && !dialogueOpen;
-            if (promptUI.activeSelf != showPrompt) promptUI.SetActive(showPrompt);
-        }
+        if (!inRange && IsTalking) EndDialogue(false);
 
-        if (inRange && InteractPressed())
-        {
-            dialogueOpen = !dialogueOpen;
-            if (dialogueUI != null) dialogueUI.SetActive(dialogueOpen);
-        }
+        if (promptUI) promptUI.SetActive(inRange && !IsTalking);
+        if (inRange && promptText) promptText.text = promptMessage;
 
-        // Close the dialogue automatically if the player walks away
-        if (!inRange && dialogueOpen)
+        if (inRange && Input.GetKeyDown(KeyCode.E))
         {
-            dialogueOpen = false;
-            if (dialogueUI != null) dialogueUI.SetActive(false);
+            if (!IsTalking) StartDialogue();
+            else NextLine();
         }
     }
 
-    private bool InteractPressed()
+    void StartDialogue()
     {
-#if ENABLE_INPUT_SYSTEM
-        return Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame;
-#else
-        return Input.GetKeyDown(KeyCode.E);
-#endif
+        var qm = QuestManager.Instance;
+
+        bool notReady = qm != null && !qm.MomTalked;
+        bool turnIn = qm != null && (qm.ApplesReady || qm.IsFinished);
+
+        if (notReady) currentLines = notReadyLines;
+        else if (turnIn) currentLines = completeLines;
+        else currentLines = dialogueLines;
+
+        // Hide the quest UI as soon as the turn-in conversation begins
+        if (qm != null && qm.ApplesReady)
+            qm.CompleteQuest();
+
+        lineIndex = 0;
+        InDialogue = true;
+        if (dialoguePanel) dialoguePanel.SetActive(true);
+        ShowLine();
     }
 
-    private void OnDrawGizmosSelected()
+    void NextLine()
     {
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(transform.position, interactDistance);
+        lineIndex++;
+        if (lineIndex >= currentLines.Length) EndDialogue(true);
+        else ShowLine();
+    }
+
+    void ShowLine()
+    {
+        if (dialogueText) dialogueText.text = currentLines[lineIndex];
+    }
+
+    void EndDialogue(bool finishedAllLines)
+    {
+        lineIndex = -1;
+        InDialogue = false;
+        if (dialoguePanel) dialoguePanel.SetActive(false);
+
+        if (!finishedAllLines || QuestManager.Instance == null) return;
+
+        // First apple-quest conversation: start the quest
+        if (currentLines == dialogueLines)
+            QuestManager.Instance.StartQuest();
+
+        // Turn-in conversation finished: show "Go back to mom"
+        else if (currentLines == completeLines)
+            QuestManager.Instance.ShowReturnObjective();
     }
 }

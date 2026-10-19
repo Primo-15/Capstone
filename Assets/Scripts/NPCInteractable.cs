@@ -30,9 +30,16 @@ public class NPCInteractable : MonoBehaviour
     [TextArea(2, 4)]
     public string[] dialogueLines =
     {
-        "Greetings Isay",
+        "Oh thank you Isay",
         "Can you help me with something?",
-        "I need you to gather 5 <color=red>apples</color> for our visitors later"
+        "I need you to gather 5 <b><color=red>apples</color></b> for our visitors later"
+    };
+
+    [Header("Apple quest, not finished yet")]
+    [TextArea(2, 4)]
+    public string[] reminderLines =
+    {
+        "Please gather me 5 <b><color=red>apples</color></b>, Isay."
     };
 
     [Header("After collecting all apples")]
@@ -41,7 +48,15 @@ public class NPCInteractable : MonoBehaviour
     {
         "Thanks Isay!",
         "You have such a good heart",
+        "By the way here's a sinigang as a thanks",
         "You can bring the sinigang to your mom"
+    };
+
+    [Header("After the quest is done")]
+    [TextArea(2, 4)]
+    public string[] afterLines =
+    {
+        "Bring the sinigang to your mom."
     };
 
     Transform player;
@@ -87,15 +102,15 @@ public class NPCInteractable : MonoBehaviour
     {
         var qm = QuestManager.Instance;
 
-        bool notReady = qm != null && !qm.MomTalked;
-        bool turnIn = qm != null && (qm.ApplesReady || qm.IsFinished);
-
-        if (notReady) currentLines = notReadyLines;
-        else if (turnIn) currentLines = completeLines;
-        else currentLines = dialogueLines;
+        if (qm == null) currentLines = dialogueLines;
+        else if (!qm.MomTalked) currentLines = notReadyLines;   // haven't seen mom yet
+        else if (qm.ApplesReady) currentLines = completeLines;   // hand in the apples
+        else if (qm.IsFinished) currentLines = afterLines;      // quest already done
+        else if (qm.IsActive) currentLines = reminderLines;   // still collecting apples
+        else currentLines = dialogueLines;   // first apple-quest talk
 
         // Hide the quest UI as soon as the turn-in conversation begins
-        if (qm != null && qm.ApplesReady)
+        if (qm != null && currentLines == completeLines)
             qm.CompleteQuest();
 
         lineIndex = 0;

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ApplePickup : MonoBehaviour
 {
@@ -11,9 +12,23 @@ public class ApplePickup : MonoBehaviour
 
     Transform player;
     Camera cam;
+    string pickupId;
 
     void Start()
     {
+        // Unique ID from scene + starting position, stable across scene reloads
+        Vector3 p0 = transform.position;
+        pickupId = $"{gameObject.scene.name}_{p0.x:F2}_{p0.y:F2}_{p0.z:F2}";
+
+        // Already picked up earlier: remove it right away
+        if (QuestManager.Instance != null && QuestManager.Instance.IsPickupCollected(pickupId))
+        {
+            if (promptUI) promptUI.SetActive(false);
+            enabled = false;
+            Destroy(gameObject);
+            return;
+        }
+
         var p = GameObject.FindGameObjectWithTag("Player");
         if (p != null) player = p.transform;
         cam = Camera.main;
@@ -47,6 +62,9 @@ public class ApplePickup : MonoBehaviour
         if (canPickUp && Input.GetKeyDown(KeyCode.E))
         {
             QuestManager.Instance.AddApple();
+            QuestManager.Instance.MarkPickupCollected(pickupId);
+
+            if (promptUI) promptUI.SetActive(false);
             Destroy(gameObject);
         }
     }

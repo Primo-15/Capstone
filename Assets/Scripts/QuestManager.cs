@@ -1,3 +1,4 @@
+using System.Collections.Generic;   // NEW (pickups)
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
@@ -31,6 +32,17 @@ public class QuestManager : MonoBehaviour
     public bool ApplesReady => questActive && !questFinished && applesCollected >= applesNeeded;
     public bool IsFinished => questFinished;
     public bool ReturnToMom => returnToMom;
+
+    // Stew is shown after mom's first talk, until Manang's quest begins
+    public bool StewVisible => momTalked && !questActive;
+
+    // StewBowl (and anything else) can listen for state changes
+    public event System.Action OnStateChanged;
+
+    // NEW (pickups): remembers collected pickups so they stay gone when a scene reloads
+    readonly HashSet<string> collectedPickups = new HashSet<string>();
+    public bool IsPickupCollected(string id) => collectedPickups.Contains(id);
+    public void MarkPickupCollected(string id) => collectedPickups.Add(id);
 
     void Awake()
     {
@@ -77,6 +89,7 @@ public class QuestManager : MonoBehaviour
             if (questPanel) questPanel.SetActive(true);
             UpdateUI();
         }
+        OnStateChanged?.Invoke();            // stew appears
     }
 
     // Called by Manang (NPC1) when the first conversation ends
@@ -86,6 +99,7 @@ public class QuestManager : MonoBehaviour
         questActive = true;
         if (questPanel) questPanel.SetActive(true);
         UpdateUI();
+        OnStateChanged?.Invoke();            // stew disappears
     }
 
     public void AddApple()

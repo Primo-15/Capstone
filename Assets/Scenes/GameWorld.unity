@@ -8537,6 +8537,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30ab992a9733a5646a4f91d87f3ad195, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuestManager
+  mainMenuSceneName: MainMenu
   questPanel: {fileID: 2055450486}
   questText: {fileID: 2055450488}
   questCompleteObject: {fileID: 2112381683}
@@ -8555,7 +8556,8 @@ Transform:
   m_LocalPosition: {x: 884.5006, y: 457.34943, z: -53.56}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1093406433}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1076242238
@@ -8994,7 +8996,7 @@ RectTransform:
   m_Children:
   - {fileID: 2055450487}
   - {fileID: 2112381684}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1067138865}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -15957,11 +15959,15 @@ MonoBehaviour:
   - Oh thank you Isay
   - Can you help me with something?
   - I need you to gather 5 <b><color=red>apples</color></b> for our visitors later
+  reminderLines:
+  - Please gather me 5 <b><color=red>apples</color></b>, Isay.
   completeLines:
   - Thanks Isay!
   - You have such a good heart
   - By the way here's a sinigang as a thanks
   - You can bring the sinigang to your mom
+  afterLines:
+  - Bring the sinigang to your mom.
 --- !u!1 &1993453853
 GameObject:
   m_ObjectHideFlags: 0
@@ -18631,6 +18637,5 @@ SceneRoots:
   - {fileID: 1988634404}
   - {fileID: 1659923493}
   - {fileID: 333930833}
-  - {fileID: 1093406433}
   - {fileID: 1067138865}
   - {fileID: 1154474213}

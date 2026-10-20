@@ -1,9 +1,13 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class QuestManager : MonoBehaviour
 {
-    public static QuestManager Instance;
+    public static QuestManager Instance { get; private set; }
+
+    [Header("Scenes")]
+    public string mainMenuSceneName = "MainMenu";
 
     [Header("UI")]
     public GameObject questPanel;               // QuestText
@@ -30,11 +34,36 @@ public class QuestManager : MonoBehaviour
 
     void Awake()
     {
-        Instance = this;
-        if (questCompleteObject) questCompleteObject.SetActive(false);
+        // A QuestManager already exists (e.g. coming back to GameWorld): destroy this duplicate
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
 
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
+        if (questCompleteObject) questCompleteObject.SetActive(false);
         if (questPanel) questPanel.SetActive(true);
         UpdateUI();
+    }
+
+    void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+            Instance = null;
+        }
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Main menu: remove the manager (and its UI) so a new game starts fresh
+        if (scene.name == mainMenuSceneName)
+            Destroy(gameObject);
     }
 
     // Called by mom (NPC2) when her first conversation ends

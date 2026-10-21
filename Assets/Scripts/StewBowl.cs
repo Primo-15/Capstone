@@ -3,7 +3,7 @@ using UnityEngine;
 public class StewBowl : MonoBehaviour
 {
     Renderer[] renderers;
-    bool lastShow = true;   // forces the first update to apply
+    bool? lastShow = null;   // null = nothing applied yet, so the first frame always sets the state
 
     void Awake()
     {
@@ -13,7 +13,7 @@ public class StewBowl : MonoBehaviour
     void Update()
     {
         bool show = QuestManager.Instance != null && QuestManager.Instance.StewVisible;
-        if (show == lastShow) return;
+        if (lastShow == show) return;
 
         lastShow = show;
         foreach (var r in renderers) r.enabled = show;

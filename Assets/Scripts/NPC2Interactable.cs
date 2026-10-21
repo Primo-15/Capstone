@@ -30,6 +30,14 @@ public class NPC2Interactable : MonoBehaviour
         "Please give that ulam to Manang, Isay."
     };
 
+    [Header("After giving the ulam, still doing Manang's quest")]
+    [TextArea(2, 4)]
+    public string[] questInProgressLines =
+    {
+        "Oh hi Isay",
+        "Didn't Manang told you something?"
+    };
+
     [Header("After returning from Manang")]
     [TextArea(2, 4)]
     public string[] returnLines =
@@ -52,8 +60,6 @@ public class NPC2Interactable : MonoBehaviour
     Transform player;
     string[] currentLines;
     int lineIndex = -1;
-    bool gaveUlam = false;
-    bool finalDone = false;
     bool IsTalking => lineIndex >= 0;
 
     void Start()
@@ -93,10 +99,16 @@ public class NPC2Interactable : MonoBehaviour
     {
         var qm = QuestManager.Instance;
 
-        if (finalDone) currentLines = afterLines;
-        else if (qm != null && qm.ReturnToMom) currentLines = returnLines;
-        else if (gaveUlam) currentLines = repeatLines;
+        if (qm == null) currentLines = dialogueLines;
+        else if (qm.QuestlineDone) currentLines = afterLines;
+        else if (qm.ReturnToMom) currentLines = returnLines;
+        else if (qm.IsActive) currentLines = questInProgressLines;
+        else if (qm.MomTalked) currentLines = repeatLines;
         else currentLines = dialogueLines;
+
+        // NEW (stew): mom received the sinigang, so the bowl disappears as the conversation starts
+        if (currentLines == returnLines && qm != null)
+            qm.DeliverStew();
 
         lineIndex = 0;
         NPCInteractable.InDialogue = true;
@@ -125,17 +137,11 @@ public class NPC2Interactable : MonoBehaviour
         if (!finishedAllLines || QuestManager.Instance == null) return;
 
         // First conversation: unlock Manang and update the objective
-        if (currentLines == dialogueLines && !gaveUlam)
-        {
-            gaveUlam = true;
+        if (currentLines == dialogueLines)
             QuestManager.Instance.FinishMomTalk(nextObjective);
-        }
 
         // Final conversation: the questline is done
-        else if (currentLines == returnLines && !finalDone)
-        {
-            finalDone = true;
+        else if (currentLines == returnLines)
             QuestManager.Instance.FinishQuestline();
-        }
     }
 }

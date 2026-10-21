@@ -1,4 +1,4 @@
-using System.Collections.Generic;   // NEW (pickups)
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
@@ -26,20 +26,25 @@ public class QuestManager : MonoBehaviour
     bool questFinished = false;    // true once the apples were handed in
     bool returnToMom = false;      // true after Manang's final dialogue
     bool questlineDone = false;    // true after mom's final dialogue
+    bool stewDelivered = false;    // NEW (stew): true once mom has received the sinigang
 
     public bool MomTalked => momTalked;
+    public bool QuestlineDone => questlineDone;
     public bool IsActive => questActive;
     public bool ApplesReady => questActive && !questFinished && applesCollected >= applesNeeded;
     public bool IsFinished => questFinished;
     public bool ReturnToMom => returnToMom;
 
-    // Stew is shown after mom's first talk, until Manang's quest begins
-    public bool StewVisible => momTalked && !questActive;
+    // NEW (stew): the bowl shows after mom's first talk until Manang's quest begins,
+    // and again after Manang hands over the sinigang until mom receives it
+    public bool StewVisible =>
+        (momTalked && !questActive) ||
+        (returnToMom && !stewDelivered);
 
     // StewBowl (and anything else) can listen for state changes
     public event System.Action OnStateChanged;
 
-    // NEW (pickups): remembers collected pickups so they stay gone when a scene reloads
+    // Remembers collected pickups so they stay gone when a scene reloads
     readonly HashSet<string> collectedPickups = new HashSet<string>();
     public bool IsPickupCollected(string id) => collectedPickups.Contains(id);
     public void MarkPickupCollected(string id) => collectedPickups.Add(id);
@@ -129,6 +134,15 @@ public class QuestManager : MonoBehaviour
         returnToMom = true;
         if (questPanel) questPanel.SetActive(true);
         UpdateUI();
+        OnStateChanged?.Invoke();            // NEW (stew): bowl reappears for the trip back to mom
+    }
+
+    // NEW (stew): called when the conversation with mom about the sinigang begins
+    public void DeliverStew()
+    {
+        if (stewDelivered) return;
+        stewDelivered = true;
+        OnStateChanged?.Invoke();            // bowl disappears
     }
 
     // Called when mom's final conversation ends: this questline is done
